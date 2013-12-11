@@ -1,0 +1,98 @@
+﻿<Page
+    x:Class="AuctionBay.View.ProfilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.View"
+    xmlns:properties="using:AuctionBay.AttachedProperties"
+    xmlns:behavior="using:AuctionBay.Behavior"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding ProfileViewModel, Source={StaticResource Locator}}"
+    xmlns:converters="using:AuctionBay.Converters">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+    </Page.Resources>
+
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:/Assets/background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <local:NavigationControl Grid.Row="0" properties:NavigationProperties.IsBackButtonEnabled="True"/>
+
+        <ProgressBar Grid.Row="1"
+                     IsIndeterminate="True"
+                     Visibility="{Binding Path=IsEventTriggered,Converter={StaticResource boolToVisibilityConverter}}"></ProgressBar>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2">
+            <StackPanel>
+                <Image Height="350" Width="350" HorizontalAlignment="Left" Source="{Binding ProfileImage}" />
+                <StackPanel Orientation="Horizontal">
+                    <Button behavior:UIOpenFilePickerButtonBehavior.OpenFilePickerSingle="{Binding StartUpload}">Load image</Button>
+                    <Button behavior:UICaptureButtonBehavior.OpenCamera="{Binding StartUpload}">Take picture</Button>
+                </StackPanel>
+                <TextBlock Text="{Binding ProgressMessage}"
+                           Style="{StaticResource SmallErrorMessage}"/>
+                <TextBlock Style="{StaticResource SmallErrorMessage}"
+                           Text="{Binding ProfileImageErrorMessage}" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical"
+                        Style="{StaticResource ProfilePageInfoPanel}">
+                <StackPanel Orientation="Horizontal"
+                            Style="{StaticResource TextRow}">
+                    <TextBlock Style="{StaticResource Label}">Nickname:</TextBlock>
+                    <TextBlock Text="{Binding Nickname}"
+                               Style="{StaticResource UneditableMediumTextField}"/>
+                    <Button Command="{Binding Edit}" CommandParameter="Nickname">Edit</Button>
+                    <TextBox Visibility="{Binding Path=IsNewNicknameVisible,Converter={StaticResource boolToVisibilityConverter}}" 
+                             Text="{Binding NewNickname, Mode=TwoWay}" 
+                             Style="{StaticResource ShortTextField}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Style="{StaticResource TextRow}">
+                    <TextBlock Style="{StaticResource Label}">Location:</TextBlock>
+                    <TextBlock Text="{Binding Location}" 
+                               Style="{StaticResource UneditableMediumTextField}"/>
+                    <Button Command="{Binding Edit}" CommandParameter="Location">Edit</Button>
+                    <ComboBox Visibility="{Binding Path=IsNewLocationVisible,Converter={StaticResource boolToVisibilityConverter}}" 
+                              ItemsSource="{Binding Locations}"
+                              SelectedIndex="{Binding Path=SelectedLocation, Mode=TwoWay}"
+                              DisplayMemberPath="CountryName"
+                              Style="{StaticResource ShortComboBox}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Style="{StaticResource TextRow}">
+                    <TextBlock Style="{StaticResource Label}">Email:</TextBlock>
+                    <TextBlock Text="{Binding Email}"
+                               Style="{StaticResource UneditableMediumTextField}"/>
+                    <Button Command="{Binding Edit}" CommandParameter="Email">Edit</Button>
+                    <TextBox Visibility="{Binding Path=IsNewEmailVisible,Converter={StaticResource boolToVisibilityConverter}}"
+                             Text="{Binding NewEmail, Mode=TwoWay}" 
+                             Style="{StaticResource ShortTextField}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Style="{StaticResource TextRow}">
+                    <TextBlock Style="{StaticResource Label}">PhoneNumber:</TextBlock>
+                    <TextBlock Text="{Binding PhoneNumber}" 
+                               Style="{StaticResource UneditableMediumTextField}"/>
+                    <Button Command="{Binding Edit}" CommandParameter="PhoneNumber">Edit</Button>
+                    <TextBox Visibility="{Binding Path=IsNewPhoneNumberVisible,Converter={StaticResource boolToVisibilityConverter}}" 
+                             Text="{Binding NewPhoneNumber, Mode=TwoWay}" 
+                             Style="{StaticResource ShortTextField}"/>
+                </StackPanel>
+                <TextBlock Style="{StaticResource SmallErrorMessage}"
+                           Text="{Binding UpdateProfileErrorMessage}" />
+                <Button Command="{Binding Update}">Save changes</Button>
+            </StackPanel>
+            <TextBlock Style="{StaticResource SmallErrorMessage}"
+                       Text="{Binding GetProfileErrorMessage}" />
+        </StackPanel>
+    </Grid>
+</Page>

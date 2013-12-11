@@ -1,0 +1,114 @@
+﻿<Page
+    x:Class="AuctionBay.View.AddNewItemPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.View"
+    xmlns:properties="using:AuctionBay.AttachedProperties"
+    xmlns:behavior="using:AuctionBay.Behavior"
+    xmlns:converters="using:AuctionBay.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding AddNewItemViewModel, Source={StaticResource Locator}}">
+
+    <Page.Resources>
+        <converters:DecimalToStringConverter x:Key="decimalToStringConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+
+        <Style x:Key="AddImagesAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+            <Setter Property="AutomationProperties.AutomationId" Value="AddImagesAppBarButton"/>
+            <Setter Property="AutomationProperties.Name" Value="Add images"/>
+            <Setter Property="Content" Value="&#xE109;"/>
+        </Style>
+
+        <Style x:Key="CreateProductAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+            <Setter Property="AutomationProperties.AutomationId" Value="CreateProductAppBarButton"/>
+            <Setter Property="AutomationProperties.Name" Value="Create product"/>
+            <Setter Property="Content" Value="&#xE105;"/>
+        </Style>
+
+        <Style x:Key="TakePictureAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+            <Setter Property="AutomationProperties.AutomationId" Value="TakePictureAppBarButton"/>
+            <Setter Property="AutomationProperties.Name" Value="Take picture"/>
+            <Setter Property="Content" Value="&#xE156;"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:/Assets/background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <local:NavigationControl Grid.Row="0" properties:NavigationProperties.IsBackButtonEnabled="True"/>
+
+        <ProgressBar Grid.Row="1"
+                     IsIndeterminate="True"
+                     Visibility="{Binding Path=IsEventTriggered,Converter={StaticResource boolToVisibilityConverter}}"></ProgressBar>
+
+        <StackPanel Grid.Row="2" 
+                    Orientation="Vertical"
+                    Margin="20, 50, 0, 20">
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Title:</TextBlock>
+                <TextBox Style="{StaticResource ShortTextField}" 
+                         Text="{Binding Path=Title, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Description:</TextBlock>
+                <TextBox Style="{StaticResource ShortTextField}"
+                         Text="{Binding Path=Description, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Bidding type:</TextBlock>
+                <ComboBox ItemsSource="{Binding BiddingTypes}"
+                          SelectedIndex="{Binding Path=SelectedBiddingType, Mode=TwoWay}"
+                          DisplayMemberPath="BiddingType">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Starting price:</TextBlock>
+                <TextBox Style="{StaticResource ShortTextField}"
+                         Text="{Binding Path=StartingPrice, Mode=TwoWay, Converter={StaticResource decimalToStringConverter}}"/>
+            </StackPanel>
+            <TextBlock Style="{StaticResource SmallErrorMessage}"
+                       Text="{Binding ErrorMessage}"
+                       HorizontalAlignment="Left"/>
+            
+            <TextBlock Margin="0, 10, 0, 10"
+                       FontSize="24">Images:</TextBlock>
+            <GridView ItemsSource="{Binding Images}"
+                      SelectionMode="None">
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" Height="200" Width="200" />
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </StackPanel>
+    </Grid>
+    <Page.BottomAppBar>
+        <AppBar>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="0">
+                    <Button behavior:UIOpenFilePickerButtonBehavior.OpenFilePickerMulti="{Binding AttachImages}" Style="{StaticResource AddImagesAppBarButtonStyle}" />
+                    <Button behavior:UICaptureButtonBehavior.OpenCamera="{Binding AttachImages}"  Style="{StaticResource TakePictureAppBarButtonStyle}" />
+                </StackPanel>
+                <Button Grid.Column="1" HorizontalAlignment="Right" Command="{Binding AddProduct}" Style="{StaticResource CreateProductAppBarButtonStyle}" />
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
+</Page>

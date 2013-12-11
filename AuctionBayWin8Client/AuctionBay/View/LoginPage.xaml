@@ -1,0 +1,61 @@
+﻿<Page
+    x:Class="AuctionBay.View.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.View"
+    xmlns:converters="using:AuctionBay.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding LoginViewModel, Source={StaticResource Locator}}">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </Page.Resources>
+    
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:/Assets/background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <ProgressBar Grid.Row="0"
+                     IsIndeterminate="True"
+                     Height="30"
+                     
+                     Visibility="{Binding Path=IsLoginTriggered, Converter={StaticResource boolToVisibilityConverter}}"></ProgressBar>
+        
+        <StackPanel Grid.Row="1"
+                    Orientation="Vertical"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <TextBlock Style="{StaticResource PageTitle}">Login</TextBlock>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Username:</TextBlock>
+                <TextBox Text="{Binding Path=Username, Mode=TwoWay}"
+                         Style="{StaticResource ShortTextField}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Password:</TextBlock>
+                <PasswordBox Name="PasswordBox"
+                             IsPasswordRevealButtonEnabled="True"
+                             Style="{StaticResource ShortPasswordField}"/>
+            </StackPanel>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Style="{StaticResource SmallErrorMessage}"
+                       HorizontalAlignment="Left"/>
+            
+            <StackPanel Orientation="Horizontal" Margin="-2, 0, 0, 0">
+                <Button Content="Login" IsEnabled="{Binding Path=IsLoginNotTriggered}" Command="{Binding Login}" CommandParameter="{Binding ElementName=PasswordBox}" Margin="0, 0, 10, 0"></Button>
+                <Button Content="Register now" IsEnabled="{Binding Path=IsLoginNotTriggered}" Command="{Binding GoToRegisterPage}"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

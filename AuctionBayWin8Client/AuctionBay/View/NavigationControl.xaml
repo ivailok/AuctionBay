@@ -1,0 +1,32 @@
+﻿<UserControl
+    x:Class="AuctionBay.View.NavigationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    DataContext="{Binding NavigationViewModel, Source={StaticResource Locator}}">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="0">
+            <Button Content="Back" Command="{Binding GoBack}" Style="{StaticResource PortraitBackButtonStyle}" Margin="20, 10, 0, 0"></Button>
+            <Button Style="{StaticResource NavigationLink}" Content="Products" Command="{Binding NavigateCommand}" CommandParameter="AvailableItems"/>
+            <Button Style="{StaticResource NavigationLink}" Content="My offers" Command="{Binding NavigateCommand}" CommandParameter="MyOffers"/>
+            <Button Style="{StaticResource NavigationLink}" Content="Received offers" Command="{Binding NavigateCommand}" CommandParameter="ReceivedOffers"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Grid.Column="1">
+            <Button Style="{StaticResource NavigationLink}" Command="{Binding NavigateCommand}" CommandParameter="Profile" Content="{Binding Nickname}"></Button>
+            <Button Style="{StaticResource NavigationLink}" Command="{Binding Logout}">Logout</Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

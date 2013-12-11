@@ -1,0 +1,134 @@
+﻿<Page
+    x:Class="AuctionBay.View.ProductDetailedPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.View"
+    xmlns:properties="using:AuctionBay.AttachedProperties"
+    xmlns:converters="using:AuctionBay.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding ProductDetailedViewModel, Source={StaticResource Locator}}">
+
+    <Page.Resources>
+        <converters:TimeSpanToStringConverter x:Key="timeSpanToStringConverter" />
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+
+        <Style x:Key="BidAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+            <Setter Property="AutomationProperties.AutomationId" Value="BidAppBarButton"/>
+            <Setter Property="AutomationProperties.Name" Value="Bid"/>
+            <Setter Property="Content" Value="&#xE110;"/>
+        </Style>
+
+        <Style x:Key="BuyoutAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+            <Setter Property="AutomationProperties.AutomationId" Value="BuyoutAppBarButton"/>
+            <Setter Property="AutomationProperties.Name" Value="Buy out"/>
+            <Setter Property="Content" Value="&#xE111;"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:/Assets/background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <local:NavigationControl Grid.Row="0" properties:NavigationProperties.IsBackButtonEnabled="True"/>
+        
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="50, 50, 0, 0">
+            <TextBlock Style="{StaticResource PageTitle}" Margin="0, 0, 10, 0">Details for:</TextBlock>
+            <TextBlock Text="{Binding Title}"
+                       Style="{StaticResource PageTitle}"/>
+        </StackPanel>
+        
+        <ProgressBar Grid.Row="2"
+                     IsIndeterminate="True"
+                     Visibility="{Binding Path=IsLoading, Converter={StaticResource boolToVisibilityConverter}}"></ProgressBar>
+        
+        <StackPanel Grid.Row="3" Margin="20" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Auctioneer:</TextBlock>
+                <TextBlock Text="{Binding Auctioneer}" 
+                           Style="{StaticResource UneditableShortTextField}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Reputation:</TextBlock>
+                <TextBlock Text="{Binding Reputation}" 
+                           Style="{StaticResource UneditableShortTextField}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Description:</TextBlock>
+                <TextBlock Text="{Binding Description}" 
+                           Style="{StaticResource UneditableShortTextField}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Current price:</TextBlock>
+                <TextBlock Text="{Binding CurrentPrice}" 
+                           Style="{StaticResource UneditableShortTextField}"
+                           Width="Auto"/>
+                <TextBlock Style="{StaticResource UneditableShortTextField}">$</TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding Path=IsBiddable, Converter={StaticResource boolToVisibilityConverter}}"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Current bidder:</TextBlock>
+                <TextBlock Text="{Binding CurrentBidder}" 
+                           Style="{StaticResource UneditableShortTextField}"
+                           Width="Auto"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Time left:</TextBlock>
+                <TextBlock Text="{Binding Path=BiddingTimeLeft, Converter={StaticResource timeSpanToStringConverter}}" 
+                           Style="{StaticResource UneditableShortTextField}"/>
+            </StackPanel>
+            <StackPanel Visibility="{Binding Path=IsBiddable, Converter={StaticResource boolToVisibilityConverter}}"  
+                        Orientation="Horizontal"
+                        Style="{StaticResource TextRow}">
+                <TextBlock Style="{StaticResource Label}">Bid by:</TextBlock>
+                <ComboBox ItemsSource="{Binding Bids}"
+                          SelectedIndex="{Binding Path=SelectedBid, Mode=TwoWay}"
+                          Width="100"
+                          Margin="0, 0, 5, 0"
+                          DisplayMemberPath="Bid">
+                </ComboBox>
+                <TextBlock Style="{StaticResource UneditableShortTextField}">$</TextBlock>
+            </StackPanel>
+            
+            <TextBlock Text="{Binding ErrorMessage}" />
+            
+            <GridView ItemsSource="{Binding Images}"
+                      SelectionMode="None">
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" Height="300" Width="300" />
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </StackPanel>
+    </Grid>
+    
+    <Page.BottomAppBar>
+        <AppBar>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Visibility="{Binding Path=IsBiddable, Converter={StaticResource boolToVisibilityConverter}}" Style="{StaticResource BidAppBarButtonStyle}" Command="{Binding Bid}" />
+                <Button Grid.Column="1" HorizontalAlignment="Right" Visibility="{Binding Path=IsNotBiddable, Converter={StaticResource boolToVisibilityConverter}}" Command="{Binding Buyout}" Style="{StaticResource BuyoutAppBarButtonStyle}"/>
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
+</Page>

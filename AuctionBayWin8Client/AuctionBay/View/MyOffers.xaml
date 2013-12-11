@@ -1,0 +1,112 @@
+﻿<common:LayoutAwarePage
+    x:Class="AuctionBay.View.MyOffers"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.View"
+    xmlns:properties="using:AuctionBay.AttachedProperties"
+    xmlns:converters="using:AuctionBay.Converters"
+    xmlns:behaviors="using:AuctionBay.Behavior"
+    xmlns:common="using:AuctionBay.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding MyOffersViewModel, Source={StaticResource Locator}}">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+
+        <CollectionViewSource
+            x:Name="itemsViewSource"
+            Source="{Binding Offers}"/>
+    </Page.Resources>
+
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:/Assets/background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <local:NavigationControl x:Name="navigationPane" Grid.Row="0" properties:NavigationProperties.IsBackButtonEnabled="True"/>
+
+        <TextBlock Grid.Row="1" Margin="50" FontSize="50">My offers</TextBlock>
+        
+        <ProgressBar Grid.Row="2"
+                     IsIndeterminate="True"
+                     Height="30"
+                     Visibility="{Binding Path=LoadingOffers, Converter={StaticResource boolToVisibilityConverter}}"></ProgressBar>
+
+        <TextBlock x:Name="errorMessage" Grid.Row="3" Foreground="Red" Text="{Binding ErrorMessage}" />
+
+        <ListView Grid.Row="4"
+                  HorizontalAlignment="Left"
+                  x:Name="itemGridView"
+                  AutomationProperties.AutomationId="ItemsGridView"
+                  AutomationProperties.Name="Items"
+                  TabIndex="1"
+                  Grid.RowSpan="2"
+                  Margin="116,136,116,46"
+                  ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+                  ItemTemplate="{StaticResource ExtendedLongItemTemplate}"
+                  SelectionMode="None"
+                  IsSwipeEnabled="false" CanReorderItems="True"
+                  >
+        </ListView>
+
+        <ListView x:Name="itemListView"
+                  AutomationProperties.AutomationId="ItemsListView"
+                  AutomationProperties.Name="Items"
+                  TabIndex="1"
+                  Grid.Row="3"
+                  Visibility="Collapsed"
+                  Margin="0,-10,0,0"
+                  Padding="10,0,0,60"
+                  ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+                  ItemTemplate="{StaticResource ExtendedShortItemTemplate}"
+                  SelectionMode="None"
+                  IsSwipeEnabled="false"/>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="96,136,86,56"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!--
+                    The back button and title have different styles when snapped, and the list representation is substituted
+                    for the grid displayed in all other view states
+                -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="navigationPane" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="errorMessage" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</common:LayoutAwarePage>

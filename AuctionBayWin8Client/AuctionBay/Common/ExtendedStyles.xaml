@@ -1,0 +1,146 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AuctionBay.Common"
+    xmlns:converters="using:AuctionBay.Converters">
+    
+    <converters:TimeSpanToStringConverter x:Key="timeSpanToStringConverter" />
+    
+    <Style x:Key="Label" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Width" Value="120" />
+        <Setter Property="Margin" Value="0, 5, 5, 0" />
+    </Style>
+
+    <Style x:Key="TextRow" TargetType="StackPanel">
+        <Setter Property="Margin" Value="0, 0, 0, 10" />
+    </Style>
+
+    <Style x:Key="ShortTextField" TargetType="TextBox">
+        <Setter Property="Width" Value="200" />
+    </Style>
+
+    <Style x:Key="UneditableShortTextField" TargetType="TextBlock">
+        <Setter Property="Width" Value="200" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Margin" Value="0, 5, 0, 0" />
+    </Style>
+
+    <Style x:Key="UneditableMediumTextField" TargetType="TextBlock" BasedOn="{StaticResource UneditableShortTextField}">
+        <Setter Property="Width" Value="300" />
+    </Style>
+
+    <Style x:Key="ShortComboBox" TargetType="ComboBox">
+        <Setter Property="Width" Value="400" />
+    </Style>
+
+    <Style x:Key="ShortPasswordField" TargetType="PasswordBox">
+        <Setter Property="Width" Value="200" />
+    </Style>
+
+    <Style x:Key="PageTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="40" />
+        <Setter Property="Margin" Value="-2, 0, 0, 20" />
+    </Style>
+
+    <Style x:Key="SmallErrorMessage" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Red" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Margin" Value="0, 0, 0, 5" />
+        <Setter Property="Width" Value="300" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="NavigationLink" TargetType="Button">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    
+    <Style x:Key="ProfilePageInfoPanel" TargetType="StackPanel">
+        <Setter Property="Margin" Value="30, 95, 0, 0" />
+    </Style>
+
+    <DataTemplate x:Key="Extended80ItemTemplate">
+        <Grid Margin="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="60" Height="60">
+                <Image Source="{Binding ImageLocation}" Stretch="UniformToFill"/>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource ItemTextStyle}" FontSize="20" MaxHeight="40"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding CurrentPrice}" Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="26" TextWrapping="NoWrap"/>
+                    <TextBlock Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="18">$</TextBlock>
+                </StackPanel>
+                <TextBlock Text="{Binding Auctioneer}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding Path=BiddingTimeLeft, Converter={StaticResource timeSpanToStringConverter}}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Extended250x250ItemTemplate">
+        <Grid HorizontalAlignment="Left" Width="350" Height="350">
+            <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
+                <Image Source="{Binding ImageLocation}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+            </Border>
+            <StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
+                <TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextStyle}" FontSize="20" Height="60" Margin="15,0,15,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding CurrentPrice}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="26" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+                    <TextBlock Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="18">$</TextBlock>
+                </StackPanel>
+                <TextBlock Text="{Binding Auctioneer}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+                <TextBlock Text="{Binding Path=BiddingTimeLeft, Converter={StaticResource timeSpanToStringConverter}}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ExtendedLongItemTemplate">
+        <StackPanel HorizontalAlignment="Left" Width="800" Height="50" Orientation="Horizontal">
+            <TextBlock Text="{Binding Product}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,0"/>
+            <TextBlock Text="{Binding Price}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="26" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            <TextBlock Text="{Binding Auctioneer}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            <TextBlock Text="{Binding AuctioneerPhone}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            <TextBlock Text="{Binding AuctioneerEmail}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ExtendedShortItemTemplate">
+        <Grid Margin="6">
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="{Binding Product}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" MaxHeight="40"/>
+                <TextBlock Text="{Binding Price}" Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="26" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding Auctioneer}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/><TextBlock Text="{Binding Auctioneer}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding AuctioneerPhone}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding AuctioneerEmail}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ExtendedOffersLongItemTemplate">
+        <StackPanel HorizontalAlignment="Left" Width="800" Height="50" Orientation="Horizontal">
+            <TextBlock Text="{Binding Product}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,0"/>
+            <TextBlock Text="{Binding Price}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="26" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            <TextBlock Text="{Binding Buyer}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            <TextBlock Text="{Binding BuyerPhone}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            <TextBlock Text="{Binding BuyerEmail}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ExtendedOffersShortItemTemplate">
+        <Grid Margin="6">
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="{Binding Product}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap" MaxHeight="40"/>
+                <TextBlock Text="{Binding Price}" Style="{StaticResource CaptionTextStyle}" FontStyle="Oblique" FontSize="26" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding Buyer}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding BuyerPhone}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+                <TextBlock Text="{Binding BuyerEmail}" Style="{StaticResource CaptionTextStyle}" FontSize="18" TextWrapping="NoWrap"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>
